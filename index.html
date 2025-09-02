@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Abdul Hanan Khan — Gamified Portfolio</title>
+  <link rel="icon" href="assets/profile.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --panel: #101722;
+      --panel-2: #0e141d;
+      --text: #f0f4ff;
+      --muted: #9fb0cf;
+      --accent: #38bdf8;
+      --accent-2: #a78bfa;
+      --success: #34d399;
+      --border: rgba(255, 255, 255, 0.12);
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    [data-theme="light"] {
+      --bg: #f6f8fb;
+      --panel: #fff;
+      --panel-2: #eef2f8;
+      --text: #061226;
+      --muted: #334155;
+      --accent: #0284c7;
+      --accent-2: #6d28d9;
+      --success: #059669;
+      --border: rgba(2, 6, 23, 0.12);
+      --shadow: 0 8px 30px rgba(2, 6, 23, 0.08);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Outfit', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 80% -10%, rgba(124, 58, 237, 0.12), transparent 60%), radial-gradient(1000px 700px at -10% 110%, rgba(14, 165, 233, 0.08), transparent 65%), var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none
+    }
+
+    .container {
+      width: min(1200px, 96%);
+      margin-inline: auto
+    }
+
+    .glass {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow)
+    }
+
+    /* HUD / NAV */
+    .hud {
+      position: sticky;
+      top: 12px;
+      z-index: 60;
+      backdrop-filter: blur(8px)
+    }
+
+    .hud-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800
+    }
+
+    .brand .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: conic-gradient(from 60deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 16px var(--accent)
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .tab {
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    .tab[aria-current='page'] {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: #061226;
+      box-shadow: 0 6px 18px rgba(10, 10, 12, 0.25)
+    }
+
+    .tab:hover {
+      transform: translateY(-2px);
+      transition: all .18s
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px
+    }
+
+    .btn {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    .btn:hover {
+      transform: translateY(-1px)
+    }
+
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+      margin-top: 18px
+    }
+
+    .profile {
+      display: flex;
+      gap: 18px;
+      padding: 18px
+    }
+
+    .avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 16px;
+      overflow: hidden;
+      flex: 0 0 auto;
+      border: 2px solid var(--border)
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block
+    }
+
+    .title {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 2.5vw, 2.4rem)
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-weight: 600
+    }
+
+    .links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px
+    }
+
+    .links .tag {
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      font-weight: 700
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 18px
+    }
+
+    .stat {
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      border-radius: 12px;
+      border: 1px solid var(--border)
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 0.9rem
+    }
+
+    .xpbar {
+      margin-top: 8px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 999px;
+      overflow: hidden
+    }
+
+    .xpfill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width .45s ease
+    }
+
+    /* ABOUT */
+    #about {
+      margin-top: 20px;
+      padding: 18px;
+      line-height: 1.6;
+    }
+
+    #about p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    /* SECTIONS */
+    section {
+      margin-top: 20px
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(12, 1fr);
+      padding: 14px
+    }
+
+    .card {
+      grid-column: span 4;
+      padding: 16px;
+      background: var(--panel);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 160px
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      font-weight: 700
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      background: rgba(125, 211, 252, 0.06);
+      font-weight: 700
+    }
+
+    .actions {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    /* Inventory horizontal rail */
+    .inventory {
+      padding: 12px
+    }
+
+    .rail {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: min(66vw, 260px);
+      gap: 14px;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 8px
+    }
+
+    .rail::-webkit-scrollbar {
+      height: 8px
+    }
+
+    .rail::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: 999px
+    }
+
+    .inv-card {
+      scroll-snap-align: start;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .meter {
+      height: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 999px;
+      overflow: hidden
+    }
+
+    .fill {
+      height: 100%;
+      width: 60%;
+      background: linear-gradient(90deg, var(--success), var(--accent));
+    }
+
+    /* Achievements */
+    .ach-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      padding: 14px
+    }
+
+    .ach {
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      text-align: center
+    }
+
+    .ach.locked {
+      opacity: 0.55;
+      filter: grayscale(0.6)
+    }
+
+    /* Certificates */
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 14px
+    }
+
+    .cert {
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .cert .meta {
+      color: var(--muted);
+      font-size: 0.92rem
+    }
+
+    /* Contact */
+    .contact {
+      display: grid;
+      margin-right: 15px;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 14px;
+      padding: 14px
+    }
+
+    .contact div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+  }
+
+   label {
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+    input,
+    textarea {
+      border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--panel-2);
+    color: var(--text);
+    margin-right: 55px;
+    padding: 10px;
+    font-size: 14px;
+    box-sizing: border-box;
+    }
+
+      button {
+    grid-column: span 2; /* Make button full width */
+    padding: 12px;
+    border: none;
+    margin-top: 15px;
+    border-radius: 10px;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  button:hover {
+    background: #0056b3;
+  }
+
+  footer {
+    padding: 22px;
+    text-align: center;
+    color: var(--muted);
+  }
+
+    /* footer {
+      padding: 22px;
+      text-align: center;
+      color: var(--muted)
+    } */
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(0deg, rgba(3, 6, 12, 0.6), rgba(3, 6, 12, 0.6));
+      z-index: 90
+    }
+
+    .modal {
+      width: min(880px, 94%);
+      max-width: 880px;
+      background: var(--panel);
+      border-radius: 12px;
+      padding: 18px;
+      border: 1px solid var(--border)
+    }
+
+    /* Responsive */
+    @media (max-width:960px) {
+      .hero {
+        grid-template-columns: 1fr
+      }
+
+      .card {
+        grid-column: span 6
+      }
+
+      .ach-grid {
+        grid-template-columns: repeat(3, 1fr)
+      }
+
+      .cert-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .contact {
+        grid-template-columns: 1fr
+      }
+    }
+
+    @media (max-width:600px) {
+      nav {
+        display: none
+      }
+
+      .card {
+        grid-column: span 12
+      }
+
+      .ach-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .avatar {
+        width: 88px;
+        height: 88px
+      }
+
+      .rail {
+        grid-auto-columns: 80%
+      }
+    }
+  </style>
+</head>
+
+<body data-theme="dark">
+  <header class="hud container glass" role="navigation" aria-label="Game HUD">
+    <div class="hud-inner">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="brand" aria-hidden>
+          <span class="dot"></span>
+          <span>AHK // Mobile App Dev</span>
+        </div>
+      </div>
+
+      <nav aria-label="Primary">
+        <button class="tab" data-scroll="#quests" aria-current="page">Quests</button>
+        <button class="tab" data-scroll="#inventory">Inventory</button>
+        <button class="tab" data-scroll="#achievements">Achievements</button>
+        <button class="tab" data-scroll="#certificates">Certificates</button>
+        <button class="tab" data-scroll="#contact">Contact</button>
+      </nav>
+
+      <div class="controls">
+        <button id="themeBtn" class="btn" title="Toggle theme">🌙 Dark</button>
+        <button id="resetBtn" class="btn" title="Reset progress">↺ Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="glass profile" aria-labelledby="profile-title">
+        <div class="avatar" aria-label="avatar">
+          <img src="https://github.com/Ahkh56/portfolio/blob/main/assets/profile.png?raw=true"
+            alt="Profile picture of Abdul Hanan Khan">
+        </div>
+        <div class="title">
+          <h1 id="profile-title">Abdul Hanan Khan</h1>
+          <div class="subtitle">Mobile App Developer • Android (Kotlin), Flutter • Project Manager</div>
+          <div class="links">
+            <a class="tag" href="mailto:ahkhan622@gmail.com">📧 Email</a>
+            <a class="tag" href="tel:+97477102280">📱 Call</a>
+            <a class="tag" href="https://www.linkedin.com/in/abdul-hanan-khan-579945134/" target="_blank"
+              rel="noopener">LinkedIn</a>
+            <a class="tag" href="https://github.com/Ahkh56" target="_blank" rel="noopener">GitHub</a>
+            <span class="badge">Doha, Qatar</span>
+          </div>
+          <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+            <button id="showCerts" class="btn">View Certificates</button>
+            <a class="btn" href="#contact" role="button">Hire / Contact</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass stats" aria-live="polite">
+        <div class="stat">
+          <div class="label">Level</div>
+          <div id="level" style="font-size:1.8rem;font-weight:800">1</div>
+        </div>
+        <div class="stat">
+          <div class="label">XP</div>
+          <div id="xpVal" style="font-size:1.1rem;font-weight:700">0 / 1000</div>
+          <div class="xpbar" aria-label="Experience">
+            <div class="xpfill" id="xpFill"></div>
+          </div>
+        </div>
+        <div class="stat">
+          <div class="label">Completed Quests</div>
+          <div id="qDone" style="font-size:1.1rem;font-weight:700">0</div>
+        </div>
+        <div class="stat">
+          <div class="label">Badges</div>
+          <div id="badgeCount" style="font-size:1.1rem;font-weight:700">0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="glass">
+      <div class="section-head">
+        <h2>About Me</h2>
+      </div>
+      <p>
+        Experienced and results-driven Mobile Application Developer with 5 years of expertise in building and
+        maintaining scalable Android and cross-platform apps. Proficient in Kotlin, Java, and Flutter, with strong
+        knowledge of MVVM architecture, Firebase, SQLite, and RESTful API integration.
+        Skilled in delivering complete mobile solutions for industries like POS systems, school management, live
+        streaming, e-commerce, and automotive platforms such as the KIXX app. Adept in the full development lifecycle,
+        Agile practices, and collaborative remote teamwork.
+        Passionate about writing clean, maintainable code and staying up to date with mobile development trends to
+        deliver polished apps and excellent user experiences.
+      </p>
+    </section>
+
+    <!-- QUESTS -->
+    <section id="quests" class="glass" aria-labelledby="quests-title">
+      <div class="section-head">
+        <h2 id="quests-title">Quests (Projects)</h2>
+        <div class="badge">Reward: +250 XP per quest</div>
+      </div>
+      <div class="grid">
+        <!-- project cards (same as before) -->
+        <article class="card" data-xp="250">
+          <h3>FoodB EPOS</h3>
+          <small>Kotlin • MVVM • Room • Firebase</small>
+          <p>FoodB EPOS Android App, enabling restaurants and retailers to manage 1,000+ daily transactions with real-time sales, inventory, and order tracking. The app streamlined operations, reducing manual errors by 40% and cutting checkout time by 30%. With secure payment integration and detailed reporting, it empowered managers to make faster, data-driven decisions.</p>
+          <div class="actions">
+            <a class="btn" href="https://foodb.co.uk/products/epos"
+              title="View">View</a>
+            <button class="btn complete">Complete Quest</button>
+          </div>
+        </article>
+
+        <article class="card" data-xp="250">
+          <h3>FoodB Handheld</h3>
+          <small>Kotlin • MVVM • Room • Firebase</small>
+          <p>FoodB Handheld App, a lightweight Android solution for waiters and staff to process orders on the go, reducing service time by 35%. Developed using the latest Android techniques including Kotlin Coroutines, (ViewModel, LiveData), Room Database, and Retrofit, the app ensured seamless offline/online sync, fast performance, and reliable real-time updates. This handheld solution improved order accuracy and boosted staff efficiency significantly.</p>
+          <div class="actions">
+            <a class="btn" href="https://foodb.co.uk/products/handheld-ordering" title="View">View</a>
+            <button class="btn complete">Complete Quest</button>
+          </div>
+        </article>
+
+        <article class="card" data-xp="250">
+          <h3>FoodB Kitchen Display</h3>
+          <small>Kotlin • MVVM • Room • Firebase</small>
+          <p>FoodB Kitchen Display App, a real-time digital ordering system built with XML layouts, ViewModel, LiveData, Coroutines, and Retrofit. The app enabled kitchens to track and manage orders with instant updates, reducing prep delays by 40%. With features like color-coded order statuses and smooth sync with POS and handheld apps, it streamlined communication between front and back of house.</p>
+          <div class="actions">
+            <a class="btn" href="https://foodb.co.uk/products/kitchen-display" title="View">View</a>
+            <button class="btn complete">Complete Quest</button>
+          </div>
+        </article>
+
+        <article class="card" data-xp="250">
+          <h3>Pink Rider — Fleet & Wallet</h3>
+          <small>Flutter • PM & QA</small>
+          <p>Managed timelines, coordinated releases, and QA’d wallet top‑ups & fleet modules for reliability at scale.
+          </p>
+          <div class="actions"><button class="btn complete">Complete Quest</button></div>
+        </article>
+
+        <article class="card" data-xp="250">
+          <h3>Car Rent App</h3>
+          <small>Flutter • Booking • Multi‑platform</small>
+          <p>Cross‑platform rentals with listings, scheduling, and booking management for a client in Kosovo.</p>
+          <div class="actions"><button class="btn complete">Complete Quest</button></div>
+        </article>
+
+        <article class="card" data-xp="250">
+          <h3>KIXX Oil Service</h3>
+          <small>Android • Notifications</small>
+          <p>Service tracking and reminders for 1,000+ vehicles, streamlining maintenance logs.</p>
+          <div class="actions"><button class="btn complete">Complete Quest</button></div>
+        </article>
+
+        <article class="card" data-xp="250">
+          <h3>Enjoy Life — Live Streaming</h3>
+          <small>Agora SDK • Realtime</small>
+          <p>Video/audio calls and live streams with 1,000+ monthly sessions and low‑latency performance.</p>
+          <div class="actions"><button class="btn complete">Complete Quest</button></div>
+        </article>
+
+        <article class="card" data-xp="250">
+          <h3>Mukabbir — School Manager</h3>
+          <small>Education • Attendance • Homework</small>
+          <p>Multi‑branch school app for 400+ students covering attendance and academic tracking.</p>
+          <div class="actions"><button class="btn complete">Complete Quest</button></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- INVENTORY -->
+    <section id="inventory" class="glass">
+      <div class="section-head">
+        <h2>Inventory (Skills)</h2>
+        <div class="badge">Swipe/Scroll →</div>
+      </div>
+      <div class="inventory">
+        <div class="rail" role="region" aria-label="Skills carousel">
+          <div class="inv-card">
+            <h4>Android (Kotlin)</h4><small>MVVM • Jetpack • Coroutines</small>
+            <div class="meter">
+              <div class="fill" style="width:92%"></div>
+            </div>
+          </div>
+          <div class="inv-card">
+            <h4>Flutter</h4><small>Cross‑platform • State Mgmt</small>
+            <div class="meter">
+              <div class="fill" style="width:85%"></div>
+            </div>
+          </div>
+          <div class="inv-card">
+            <h4>Firebase</h4><small>Auth • Firestore • FCM</small>
+            <div class="meter">
+              <div class="fill" style="width:88%"></div>
+            </div>
+          </div>
+          <div class="inv-card">
+            <h4>Room & SQLite</h4><small>Offline‑first • Caching</small>
+            <div class="meter">
+              <div class="fill" style="width:86%"></div>
+            </div>
+          </div>
+          <div class="inv-card">
+            <h4>REST APIs</h4><small>Retrofit • JSON</small>
+            <div class="meter">
+              <div class="fill" style="width:90%"></div>
+            </div>
+          </div>
+          <div class="inv-card">
+            <h4>Project Management</h4><small>Agile • Jira • GitHub</small>
+            <div class="meter">
+              <div class="fill" style="width:80%"></div>
+            </div>
+          </div>
+          <div class="inv-card">
+            <h4>UI/UX</h4><small>Material Design • XML</small>
+            <div class="meter">
+              <div class="fill" style="width:82%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACHIEVEMENTS -->
+    <section id="achievements" class="glass">
+      <div class="section-head">
+        <h2>Achievements</h2>
+        <div class="badge">Auto‑unlocks with XP</div>
+      </div>
+      <div class="ach-grid">
+        <div class="ach locked" data-unlock="250">🏁 First Quest</div>
+        <div class="ach locked" data-unlock="500">🧭 Explorer</div>
+        <div class="ach locked" data-unlock="1000">💎 Level Up</div>
+        <div class="ach locked" data-unlock="1500">🚀 Sprint Master</div>
+        <div class="ach locked" data-unlock="2000">🏆 Pro Builder</div>
+        <div class="ach locked" data-unlock="3000">👑 Elite Dev</div>
+      </div>
+    </section>
+
+    <!-- CERTIFICATES -->
+    <section id="certificates" class="glass" aria-labelledby="cert-title">
+      <div class="section-head">
+        <h2 id="cert-title">Certificates</h2>
+        <div class="badge">Verified / Earned</div>
+      </div>
+      <div class="cert-grid">
+        <div class="cert">
+          <strong>Project Planning: Putting It All Together</strong>
+          <div class="meta">Issued by Google — Project Planning</div>
+          <p class="meta">Certificate covering project planning essentials and delivery workflows.</p>
+          <div style="display:flex;gap:8px;margin-top:auto">
+            <a class="btn" href="https://www.coursera.org/account/accomplishments/verify/N4WSL6CTOMNP" title="Download (replace link)">View</a>
+            <a class="btn" href="https://drive.google.com/file/d/1XdYJkE7yaDhWkpM850uEjK_J49vMLprL/view?usp=sharing" title="Download (replace link)">Download</a>
+          </div>
+        </div>
+
+        <div class="cert">
+          <strong>Foundations of Project Management</strong>
+          <div class="meta">Issued by Google — Foundations of Project Management</div>
+          <p class="meta">Fundamentals of project management: scopes, timelines, and stakeholder coordination.</p>
+          <div style="display:flex;gap:8px;margin-top:auto">
+            <a class="btn" href="https://www.coursera.org/account/accomplishments/verify/HF8SZAAJJW01" title="Download (replace link)">View</a>
+            <a class="btn" href="https://drive.google.com/file/d/1_wrsBcso5HOIOzOvoqMh5yE1eTCC5WMh/view?usp=sharing" title="Download (replace link)">Download</a>
+          </div>
+        </div>
+
+        <div class="cert">
+          <strong>Resume & More</strong>
+          <div class="meta">Full resume and project certificates</div>
+          <p class="meta">You can attach certificate PDFs to these buttons — let me know if you want me to add your
+            files here.</p>
+          <div style="display:flex;gap:8px;margin-top:auto">
+            <a class="btn" href="https://drive.google.com/file/d/12MmV3S6FygDQKcwv7Ar8DXVSot1bewQB/view?usp=sharing"
+              title="Download">Download Resume</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="glass">
+      <div class="section-head">
+        <h2>Contact</h2>
+      </div>
+      <div class="contact">
+        <div class="panel">
+          <h3>Send a Message</h3>
+
+          <form id="contactForm">
+            <div style="margin-bottom:8px">
+              <label for="name">Name</label>
+              <input id="name" name="name" placeholder="Your name" required>
+            </div>
+            <div style="margin-bottom:8px">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" placeholder="you@example.com" required>
+            </div>
+            <div style="margin-bottom:8px">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="4" placeholder="Hello Abdul…" required></textarea>
+            </div>
+            <button class="btn" type="submit">Send</button>
+          </form>
+
+          <script>
+            document.getElementById('contactForm').addEventListener('submit', function (e) {
+              e.preventDefault();
+
+              const name = document.getElementById('name').value;
+              const email = document.getElementById('email').value;
+              const message = document.getElementById('message').value;
+
+              // Build Gmail link
+              const subject = encodeURIComponent("Portfolio Contact from " + name);
+              const body = encodeURIComponent(
+                "Name: " + name + "\n" +
+                "Email: " + email + "\n\n" +
+                "Message:\n" + message
+              );
+
+              const gmailURL = `https://mail.google.com/mail/?view=cm&fs=1&to=ahkhan622@gmail.com&su=${subject}&body=${body}`;
+
+              // Open Gmail in new tab
+              window.open(gmailURL, '_blank');
+            });
+          </script>
+          <p id="contactStatus" role="status" aria-live="polite" style="margin-top:8px;color:var(--muted)"></p>
+        </div>
+        <div class="panel">
+          <h3>Quick Links</h3>
+          <p><strong>Email:</strong> <a href="mailto:ahkhan622@gmail.com">ahkhan622@gmail.com</a></p>
+          <p><strong>Phone:</strong> <a href="tel:+97477102280">+974 7710 2280</a></p>
+          <p><strong>Location:</strong> Doha, Qatar</p>
+          <p><a class="tag" href="https://www.linkedin.com/in/abdul-hanan-khan-579945134/" target="_blank"
+              rel="noopener">LinkedIn</a>
+            <a class="tag" href="https://github.com/Ahkh56" target="_blank" rel="noopener">GitHub</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer><small>© <span id="year"></span> Abdul Hanan Khan — Portfolio</small></footer>
+  </main>
+
+  <!-- Modal for certificates -->
+  <div id="modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+        <strong id="modalTitle">Certificate</strong>
+        <button id="closeModal" class="btn">Close</button>
+      </div>
+      <div id="modalBody" style="margin-top:12px;color:var(--muted)"></div>
+    </div>
+  </div>
+
+  <script>
+    // Theme
+    const body = document.body; const themeBtn = document.getElementById('themeBtn');
+    function applyTheme(saved) { body.setAttribute('data-theme', saved || 'dark'); themeBtn.textContent = body.dataset.theme === 'dark' ? '🌙 Dark' : '☀️ Light'; }
+    applyTheme(localStorage.getItem('theme'));
+    themeBtn.addEventListener('click', () => { const next = body.dataset.theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', next); applyTheme(next); });
+
+    // Tabs smooth scroll + default active
+    document.querySelectorAll('.tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = document.querySelector(btn.dataset.scroll);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.querySelectorAll('.tab').forEach(t => t.removeAttribute('aria-current'));
+        btn.setAttribute('aria-current', 'page');
+      });
+    });
+    // ensure Quests active on load
+    const firstTab = document.querySelector('.tab[data-scroll="#quests"]'); if (firstTab) { document.querySelectorAll('.tab').forEach(t => t.removeAttribute('aria-current')); firstTab.setAttribute('aria-current', 'page'); }
+
+    // XP system
+    const xpFill = document.getElementById('xpFill'), xpVal = document.getElementById('xpVal'), levelEl = document.getElementById('level'), qDone = document.getElementById('qDone'), badgeCount = document.getElementById('badgeCount'); const saved = JSON.parse(localStorage.getItem('ahk_game_state') || '{}'); let xp = Number(saved.xp || 0); let completed = new Set(saved.completed || []); 
+    function levelFromXP(x) { return Math.floor(x / 1000) + 1; } 
+    function updateHUD() { const lvl = levelFromXP(xp); const progress = xp % 1000; const pct = Math.min(100, (progress / 1000) * 100); xpFill.style.width = pct + '%'; xpVal.textContent = progress + ' / 1000'; levelEl.textContent = lvl; qDone.textContent = completed.size; let unlocked = 0; document.querySelectorAll('.ach').forEach(a => { const req = Number(a.dataset.unlock || 0); if (xp >= req) { a.classList.remove('locked'); unlocked++; } else a.classList.add('locked'); }); badgeCount.textContent = unlocked; localStorage.setItem('ahk_game_state', JSON.stringify({ xp, completed: [...completed] })); } document.querySelectorAll('.card .complete').forEach((btn, idx) => { btn.addEventListener('click', () => { const parent = btn.closest('.card'); const id = [...document.querySelectorAll('.card')].indexOf(parent); if (completed.has(id)) { btn.textContent = 'Already Completed'; return; } const gain = Number(parent.dataset.xp || 250); xp += gain; completed.add(id); btn.textContent = 'Completed ✓'; btn.disabled = true; btn.style.opacity = .8; updateHUD(); }); });[...completed].forEach(i => { const card = document.querySelectorAll('.card')[i]; if (card) { const b = card.querySelector('.complete'); if (b) { b.textContent = 'Completed ✓'; b.disabled = true; b.style.opacity = .8; } } }); updateHUD(); document.getElementById('resetBtn').addEventListener('click', () => { if (confirm('Reset XP and progress?')) { xp = 0; completed = new Set(); updateHUD(); document.querySelectorAll('.card .complete').forEach(b => { b.textContent = 'Complete Quest'; b.disabled = false; b.style.opacity = 1; }); } });
+
+    // Contact
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      const status = document.getElementById('contactStatus');
+
+      // Show temporary message
+      status.textContent = 'Thanks ' + (data.name || 'there') + '! for contacting me.';
+      status.style.opacity = 1;
+
+      // Hide after 3 seconds
+      setTimeout(() => {
+        status.style.opacity = 0;
+        status.textContent = '';
+      }, 3000);
+
+      e.target.reset();
+    });
+
+
+    // Certificate modal
+    const modal = document.getElementById('modal'), modalBody = document.getElementById('modalBody'), modalTitle = document.getElementById('modalTitle');
+    document.querySelectorAll('.view-cert').forEach(btn => { btn.addEventListener('click', () => { const id = btn.dataset.cert; if (id === 'planning') { modalTitle.textContent = 'Project Planning: Putting It All Together'; modalBody.innerHTML = '<p><strong>Issuer:</strong> Google<br><strong>Details:</strong> Certificate covering project planning essentials and delivery workflows.</p>'; } else if (id === 'foundation') { modalTitle.textContent = 'Foundations of Project Management'; modalBody.innerHTML = '<p><strong>Issuer:</strong> Professional Program<br><strong>Details:</strong> Fundamentals of project management: scopes, timelines, and stakeholder coordination.</p>'; } else { modalTitle.textContent = 'Certificate'; modalBody.textContent = 'Details not available.' } modal.style.display = 'flex'; modal.setAttribute('aria-hidden', 'false'); }); });
+    document.getElementById('closeModal').addEventListener('click', () => { modal.style.display = 'none'; modal.setAttribute('aria-hidden', 'true'); });
+    document.getElementById('showCerts').addEventListener('click', () => { document.querySelector('.tab[data-scroll="#certificates"]').click(); });
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>
