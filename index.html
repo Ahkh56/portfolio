@@ -146,6 +146,26 @@
       transform: translateY(-1px)
     }
 
+
+    .btn_projects{
+    grid-column: span 2; /* Make button full width */
+    padding: 12px;
+    border: none;
+    margin-top: 15px;
+    border-radius: 10px;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .btn_projects:hover {
+    background: #0056b3;
+  }
+
+
+
     /* HERO */
     .hero {
       display: grid;
@@ -640,7 +660,7 @@
           <small>Kotlin • MVVM • Room • Firebase</small>
           <p>FoodB EPOS Android App, enabling restaurants and retailers to manage 1,000+ daily transactions with real-time sales, inventory, and order tracking. The app streamlined operations, reducing manual errors by 40% and cutting checkout time by 30%. With secure payment integration and detailed reporting, it empowered managers to make faster, data-driven decisions.</p>
           <div class="actions">
-            <a class="btn" href="https://foodb.co.uk/products/epos"
+            <a class="btn_projects" href="https://foodb.co.uk/products/epos"
               title="View">View</a>
             <button class="btn complete">Complete Quest</button>
           </div>
@@ -651,7 +671,7 @@
           <small>Kotlin • MVVM • Room • Firebase</small>
           <p>FoodB Handheld App, a lightweight Android solution for waiters and staff to process orders on the go, reducing service time by 35%. Developed using the latest Android techniques including Kotlin Coroutines, (ViewModel, LiveData), Room Database, and Retrofit, the app ensured seamless offline/online sync, fast performance, and reliable real-time updates. This handheld solution improved order accuracy and boosted staff efficiency significantly.</p>
           <div class="actions">
-            <a class="btn" href="https://foodb.co.uk/products/handheld-ordering" title="View">View</a>
+            <a class="btn_projects" href="https://foodb.co.uk/products/handheld-ordering" title="View">View</a>
             <button class="btn complete">Complete Quest</button>
           </div>
         </article>
@@ -661,7 +681,7 @@
           <small>Kotlin • MVVM • Room • Firebase</small>
           <p>FoodB Kitchen Display App, a real-time digital ordering system built with XML layouts, ViewModel, LiveData, Coroutines, and Retrofit. The app enabled kitchens to track and manage orders with instant updates, reducing prep delays by 40%. With features like color-coded order statuses and smooth sync with POS and handheld apps, it streamlined communication between front and back of house.</p>
           <div class="actions">
-            <a class="btn" href="https://foodb.co.uk/products/kitchen-display" title="View">View</a>
+            <a class="btn_projects" href="https://foodb.co.uk/products/kitchen-display" title="View">View</a>
             <button class="btn complete">Complete Quest</button>
           </div>
         </article>
